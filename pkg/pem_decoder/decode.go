@@ -1,4 +1,4 @@
-package pem
+package pem_decoder
 
 import (
 	"crypto/rsa"
@@ -26,7 +26,7 @@ func ParseCertificate(pemCert []byte) (*x509.Certificate, error) {
 	return cert, nil
 }
 
-func ParseRSAPrivateKey(pemPrivateKey []byte) (*rsa.PrivateKey, error) {
+func ParseRSAPrivateKey(pemPrivateKey []byte) (key *rsa.PrivateKey, err error) {
 	// Decode the PEM encoded private key
 	block, _ := pem.Decode(pemPrivateKey)
 	var blockBytes []byte
@@ -37,7 +37,7 @@ func ParseRSAPrivateKey(pemPrivateKey []byte) (*rsa.PrivateKey, error) {
 	}
 
 	// Parse the DER-encoded bytes of the private key
-	key, err := x509.ParsePKCS1PrivateKey(blockBytes)
+	key, err = x509.ParsePKCS1PrivateKey(blockBytes)
 	if err != nil {
 		// Try parsing as PKCS8
 		var keyX any
